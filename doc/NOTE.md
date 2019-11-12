@@ -72,3 +72,80 @@ while|
 **全局变量**
 
 在默认情况下，变量总是认为是全局的。全局变量不需要声明，给一个变量赋值后即创建了这个全局变量，访问一个没有初始化的全局变量也不会出错，只不过得到的结果是：nil。
+
+**Lua数据类型**
+
+Lua是动态类型语言，变量不要类型定义，只需要为变量赋值。值可以存储在变量中，作为参数传递或结果返回。
+
+Lua中有8个基本类型分别为：`nil`、`boolean`、`number`、`string`、`userdata`、`funciton`、`thread`和`table`
+
+数据类型|描述
+-|-
+nil|这个最简单，只有值nil属于该类，表示一个无效值（在条件表达式中相当于false）。
+boolean|	包含两个值：false和true。
+number|	表示双精度类型的实浮点数
+string|	字符串由一对双引号或单引号来表示
+function|	由 C 或 Lua 编写的函数
+userdata|	表示任意存储在变量中的C数据结构
+thread|	表示执行的独立线路，用于执行协同程序
+table|	Lua 中的表（table）其实是一个"关联数组"（associative arrays），数组的索引可以是数字、字符串或表类型。在 Lua 里，table 的创建是通过"构造表达式"来完成，最简单构造表达式是{}，用来创建一个空表。
+
+可以使用type函数测试给定变量或者值的类型
+
+```lua
+print(type("Hello world")) --> string
+print(type(10.4*3))             --> number
+print(type(print))              --> function
+print(type(type))               --> function
+print(type(true))               --> boolean
+print(type(nil))                --> nil
+print(type(type(X)))            --> string
+```
+
+**nil(空)**
+
+nil类型表示一种没有任何有效值，它只有一个值 --nil，例如打印一个没有赋值的变量，便会输出一个nil值
+
+对于全局变量和table，nil还有删除作用，给全局变量或者table表里的变量赋一个nil值，等同于把它们删除，执行下面的代码：
+
+```lua
+tab1 = { key1 = "val1", key2 = "val2", "val3" }
+for k, v in pairs(tab1) do
+    print(k .. " - " .. v)
+end
+ 
+tab1.key1 = nil
+for k, v in pairs(tab1) do
+    print(k .. " - " .. v)
+end
+```
+
+*注意：nil作比较时应该加上双引号`"`*
+
+```lua
+> type(X)
+nil
+> type(X)==nil
+false
+> type(X)=="nil"
+true
+>
+```
+
+**boolean(布尔)**
+
+boolean 类型只有两个可选值：true（真） 和 false（假），Lua 把 false 和 nil 看作是"假"，其他的都为"真":
+
+```lua
+print(type(true))
+print(type(false))
+print(type(nil))
+ 
+if false or nil then
+    print("至少有一个是 true")
+else
+    print("false 和 nil 都为 false!")
+end
+```
+
+**number(数字)**
