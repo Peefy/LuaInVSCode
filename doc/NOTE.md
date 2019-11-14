@@ -325,4 +325,42 @@ end
 print(a, b)
 ```
 
+**赋值语句**
 
+赋值是改变一个变量的值和改变表域的最基本的方法。
+
+```lua
+a = "hello" .. "world"
+t.n = t.n + 1
+a, b = 10, 2 * x       <-->       a=10; b=2*x
+x, y = y, x                     -- swap 'x' for 'y'
+a[i], a[j] = a[j], a[i]         -- swap 'a[i]' for 'a[j]'
+```
+
+```lua
+a, b, c = 0, 1
+print(a,b,c)             --> 0   1   nil
+ 
+a, b = a+1, b+1, b+2     -- value of b+2 is ignored
+print(a,b)               --> 1   2
+ 
+a, b, c = 0
+print(a,b,c)             --> 0   nil   nil
+```
+
+**索引**
+
+对 table 的索引使用方括号 []。Lua 也提供了 . 操作。
+
+```lua
+t[i]
+t.i                 -- 当索引为字符串类型时的一种简化写法
+gettable_event(t,i) -- 采用索引访问本质上是一个类似这样的函数调用
+```
+
+```lua
+site = {}
+site["key"] = "value"
+print(site["key"])
+print(site.key)
+```
