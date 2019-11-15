@@ -364,3 +364,26 @@ site["key"] = "value"
 print(site["key"])
 print(site.key)
 ```
+
+**Lua循环**
+
+循环类型|描述
+-|-
+`while` 循环|	在条件为 `true` 时，让程序重复地执行某些语句。执行语句前会先检查条件是否为 `true`。
+`for 循环`|	重复执行指定语句，重复次数可在 `for` 语句中控制。
+`repeat...until`|	重复执行循环，直到 指定的条件为真时为止
+`循环嵌套`|	可以在循环内嵌套一个或多个循环语句（`while do ... end`;`for ... do ... end`;`repeat ... until`;）
+
+**循环控制语句**
+
+```lua
+for i = 10, 1, -1 do
+  repeat
+    if i == 5 then
+      print("continue code here")
+      break
+    end
+    print(i, "loop code here")
+  until true
+end
+```
