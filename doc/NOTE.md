@@ -387,3 +387,186 @@ for i = 10, 1, -1 do
   until true
 end
 ```
+
+*lua中没有continue语句*
+
+```lua
+for i = 10, 1, -1 do
+  repeat
+    if i == 5 then
+      print("continue code here")
+      break
+    end
+    print(i, "loop code here")
+  until true
+end
+```
+
+**lua流程控制**
+
+控制结构的条件表达式结果可以是任何值，Lua认为false和nil为假，true和非nil为真。
+
+*注意：要注意的是Lua中 0 为 true：*
+
+lua中提供了以下控制语句
+
+语句|描述
+-|-
+`if 语句`|	if 语句 由一个布尔表达式作为条件判断，其后紧跟其他语句组成。
+`if...else 语句`|	if 语句 可以与 else 语句搭配使用, 在 if 条件表达式为 false 时执行 else 语句代码。
+`if 嵌套语句`|	你可以在if 或 else if中使用一个或多个 if 或 else if 语句 。
+
+```lua
+--[ 定义变量 --]
+a = 100;
+b = 200;
+
+--[ 检查条件 --]
+if( a == 100 )
+then
+   --[ if 条件为 true 时执行以下 if 条件判断 --]
+   if( b == 200 )
+   then
+      --[ if 条件为 true 时执行该语句块 --]
+      print("a 的值为 100 b 的值为 200" );
+   end
+end
+print("a 的值为 :", a );
+print("b 的值为 :", b );
+```
+
+**lua函数**
+
+在Lua中，函数是对语句和表达式进行抽象的主要方法。既可以用来处理一些特殊的工作，也可以用来计算一些值。
+
+Lua 提供了许多的内建函数，可以很方便的在程序中调用它们，如print()函数可以将传入的参数打印在控制台上。
+
+Lua 函数主要有两种用途：
+
+* 完成指定的任务，这种情况下函数作为调用语句使用；
+* 计算并返回值，这种情况下函数作为赋值语句的表达式使用。
+
+```lua
+--[[ 函数返回两个值的最大值 --]]
+function max(num1, num2)
+   if (num1 > num2) then
+      result = num1;
+   else
+      result = num2;
+   end
+   return result;
+end
+-- 调用函数
+print("两值比较最大值为 ",max(10, 4))
+print("两值比较最大值为 ",max(5, 6))
+```
+
+lua中可以将函数作为参数传递给函数
+
+```lua
+myprint = function(param)
+   print("这是打印函数 -   ##",param,"##")
+end
+
+function add(num1, num2, functionPrint)
+   result = num1 + num2
+   -- 调用传递的函数参数
+   functionPrint(result)
+end
+myprint(10)
+-- myprint 函数作为参数传递
+add(2, 5, myprint)
+```
+
+**lua函数多返回值**
+
+Lua函数可以返回多个结果值，比如string.find，其返回匹配串"开始和结束的下标"（如果不存在匹配串返回nil）
+
+```lua
+s, e = string.find("www.runoob.com", "runoob") 
+print(s, e)
+```
+
+Lua函数中，在return后列出要返回的值的列表即可返回多值，如：
+
+```lua
+function maximum (a)
+    local mi = 1             -- 最大值索引
+    local m = a[mi]          -- 最大值
+    for i,val in ipairs(a) do
+       if val > m then
+           mi = i
+           m = val
+       end
+    end
+    return m, mi
+end
+print(maximum({8, 10, 23, 12, 5}))
+```
+
+**lua可变参数**
+
+Lua 函数可以接受可变数目的参数，和 C 语言类似，在函数参数列表中使用三点 ... 表示函数有可变的参数。
+
+```lua
+function add(...)  
+local s = 0  
+  for i, v in ipairs{...} do   --> {...} 表示一个由所有变长参数构成的数组  
+    s = s + v  
+  end  
+  return s  
+end  
+print(add(3,4,5,6,7))  --->25
+```
+
+我们可以将可变参数赋值给一个变量。
+
+例如，我们计算几个数的平均值：
+
+```lua
+function average(...)
+   result = 0
+   local arg={...}    --> arg 为一个表，局部变量
+   for i,v in ipairs(arg) do
+      result = result + v
+   end
+   print("总共传入 " .. #arg .. " 个数")
+   return result/#arg
+end
+
+print("平均值为",average(10,5,3,4,5,6))
+```
+
+可以通过 select("#",...) 来获取可变参数的数量:
+
+```lua
+function average(...)
+   result = 0
+   local arg={...}
+   for i,v in ipairs(arg) do
+      result = result + v
+   end
+   print("总共传入 " .. select("#",...) .. " 个数")
+   return result/select("#",...)
+end
+
+print("平均值为",average(10,5,3,4,5,6))
+```
+
+通常在遍历变长参数的时候只需要使用 `{…}`，然而变长参数可能会包含一些 `nil`，那么就可以用 `select` 函数来访问变长参数了：`select('#', …)` 或者 `select(n, …)`
+
+* `select('#', …)` 返回可变参数的长度
+* `select(n, …)` 用于访问 `n` 到 `select('#',…)` 的参数
+
+```lua
+do  
+    function foo(...)  
+        for i = 1, select('#', ...) do  -->获取参数总数
+            local arg = select(i, ...); -->读取参数
+            print("arg", arg);  
+        end  
+    end  
+ 
+    foo(1, 2, 3, 4);  
+end
+```

@@ -132,3 +132,65 @@ end
 
 print(a, b)
 
+for i = 10, 1, -1 do
+    repeat
+      if i == 5 then
+        print("continue code here")
+        break
+      end
+      print(i, "loop code here")
+    until true
+end
+
+--[ 定义变量 --]
+a = 100;
+b = 200;
+
+--[ 检查条件 --]
+if( a == 100 )
+then
+   --[ if 条件为 true 时执行以下 if 条件判断 --]
+   if( b == 200 )
+   then
+      --[ if 条件为 true 时执行该语句块 --]
+      print("a 的值为 100 b 的值为 200" );
+   end
+end
+print("a 的值为 :", a );
+print("b 的值为 :", b );
+
+--[[ 函数返回两个值的最大值 --]]
+function max(num1, num2)
+    if (num1 > num2) then
+       result = num1;
+    else
+       result = num2;
+    end
+    return result;
+end
+-- 调用函数
+print("两值比较最大值为 ",max(10, 4))
+print("两值比较最大值为 ",max(5, 6))
+
+function average(...)
+    result = 0
+    local arg={...}    --> arg 为一个表，局部变量
+    for i,v in ipairs(arg) do
+       result = result + v
+    end
+    print("总共传入 " .. #arg .. " 个数")
+    return result/#arg
+end
+ 
+print("平均值为",average(10,5,3,4,5,6))
+
+do  
+    function foo(...)  
+        for i = 1, select('#', ...) do  -->获取参数总数
+            local arg = select(i, ...); -->读取参数
+            print("arg", arg);  
+        end  
+    end  
+ 
+    foo(1, 2, 3, 4);  
+end
