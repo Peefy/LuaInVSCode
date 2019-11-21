@@ -316,3 +316,11 @@ print("(a + b) * (c / d) 运算值为 :",e )
 
 e = a + (b * c) / d;  -- 20 + (150/5)
 print("a + (b * c) / d 运算值为   :",e )
+
+string1 = "Lua"
+print("\"字符串 1 是\"", string1)
+string2 = 'dugu.com'
+print("字符串 2 是", string2)
+
+string3 = [["dugu"]]
+print("字符串 3 是", string3)
