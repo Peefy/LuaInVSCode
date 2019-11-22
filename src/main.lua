@@ -384,3 +384,44 @@ print(repeatedString)
 s = "Deadline is 30/05/1999, firm"
 date = "%d%d/%d%d/%d%d%d%d"
 print(string.sub(s, string.find(s, date)))    --> 30/05/1999
+
+array = {"Lua", "dugu"}
+for i = 0, 2 do
+   print(array[i])
+end
+
+array = {}
+for i = 2, 2 do
+   array[i] = i * 2
+end
+
+for i = -2, 2 do
+   print(array[i])
+end
+
+array = {}
+for i = 1, 3 do
+   array[i] = {}
+      for j = 1, 3 do
+         array[i][j] = i * j
+      end
+end
+
+-- 访问数组
+for i = 1, 3 do
+   for j = 1, 3 do
+      print(array[i][j])
+   end
+end
+
+function iter (a, i)
+    i = i + 1
+    local v = a[i]
+    if v then
+       return i, v
+    end
+end
+ 
+function ipairs (a)
+    return iter, a, 0
+end

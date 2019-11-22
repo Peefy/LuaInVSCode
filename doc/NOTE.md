@@ -999,4 +999,153 @@ print(string.sub(s, string.find(s, date)))    --> 30/05/1999
 
 **lua数组**
 
+lua数组的索引键值可以使用整数表示，数组的大小不是固定的
 
+**一维数组**
+
+一维数组是最简单的数组，其逻辑结构是线性表。一维数组可以用for循环出数组中的元素
+
+```lua
+array = {"Lua", "dugu"}
+for i = 0, 2 do
+   print(array[i])
+end
+```
+
+可以使用整数索引来访问数组元素，如果输入的索引号没有值则返回nil
+
+*注意：在lua索引值是以1为开始，但是也可以指定零开始，除此之外还可以指定负数作为索引*
+
+```lua
+array = {}
+for i = 2, 2 do
+   array[i] = i * 2
+end
+
+for i = -2, 2 do
+   print(array[i])
+end
+```
+
+**多维数组**
+
+多维数组即数组中包含或一维数组的索引键值对应一个数组。
+
+```lua
+-- 初始化数组
+array = {}
+for i = 1, 3 do
+   array[i] = {}
+      for j = 1, 3 do
+         array[i][j] = i * j
+      end
+end
+
+-- 访问数组
+for i = 1, 3 do
+   for j = 1, 3 do
+      print(array[i][j])
+   end
+end
+```
+
+**lua迭代器**
+
+迭代器（iterator）是一种对象，它能够用来遍历标准模板库容器中的部分或全部元素，每个迭代器对象代表容器中的确定的地址。
+
+在 Lua 中迭代器是一种支持指针类型的结构，它可以遍历集合的每一个元素。
+
+**泛型for迭代器**
+
+泛型for在自己内部保存迭代函数，实际上它保存三个值：迭代函数、状态常量、控制变量。
+
+```lua
+array = {"Google", "Runoob"}
+
+for key,value in ipairs(array)
+do
+   print(key, value)
+end
+```
+
+以上实例中使用了 Lua 默认提供的迭代函数 ipairs。
+
+泛型 for 的执行过程：
+
+* 初始化，计算 in 后面表达式的值，表达式应该返回泛型 for 需要的三个值：迭代函数、状态常量、控制变量；与多值赋值一样，如果表达式返回的结果个数不足三个会自动用 nil 补足，多出部分会被忽略。
+* 将状态常量和控制变量作为参数调用迭代函数（注意：对于 for 结构来说，状态常量没有用处，仅仅在初始化时获取他的值并传递给迭代函数）。
+* 将迭代函数返回的值赋给变量列表。
+* 如果返回的第一个值为nil循环结束，否则执行循环体。
+* 回到第二步再次调用迭代函数
+
+在Lua中常常使用函数来描述迭代器，每次调用该函数就返回集合的下一个元素。Lua 的迭代器包含以下两种类型：
+
+* **无状态的迭代器**
+
+无状态的迭代器是指不保留任何状态的迭代器，因此在循环中可以利用无状态迭代器避免创建闭包花费额外的代价。
+
+每一次迭代，迭代函数都是用两个变量（状态常量和控制变量）的值作为参数被调用，一个无状态的迭代器只利用这两个值可以获取下一个元素。
+
+这种无状态迭代器的典型的简单的例子是 ipairs，它遍历数组的每一个元素。
+
+以下实例使用了一个简单的函数来实现迭代器，实现 数字 n 的平方：
+
+```lua
+function square(iteratorMaxCount,currentNumber)
+   if currentNumber<iteratorMaxCount
+   then
+      currentNumber = currentNumber+1
+   return currentNumber, currentNumber*currentNumber
+   end
+end
+
+for i,n in square,3,0
+do
+   print(i,n)
+end
+```
+
+迭代的状态包括被遍历的表（循环过程中不会改变的状态常量）和当前的索引下标（控制变量），ipairs 和迭代函数都很简单，在 Lua 中可以这样实现：
+
+```lua
+function iter (a, i)
+    i = i + 1
+    local v = a[i]
+    if v then
+       return i, v
+    end
+end
+ 
+function ipairs (a)
+    return iter, a, 0
+end
+```
+
+当 Lua 调用 ipairs(a) 开始循环时，他获取三个值：迭代函数 iter、状态常量 a、控制变量初始值 0；然后 Lua 调用 iter(a,0) 返回 1, `a[1]`（除非 `a[1]`=nil）；第二次迭代调用 iter(a,1) 返回 2, `a[2]`……直到第一个 nil 元素。
+
+* **多状态的迭代器**
+
+很多情况下，迭代器需要保存多个状态信息而不是简单的状态常量和控制变量，最简单的方法是使用闭包，还有一种方法就是将所有的状态信息封装到 table 内，将 table 作为迭代器的状态常量，因为这种情况下可以将所有的信息存放在 table 内，所以迭代函数通常不需要第二个参数。
+
+```lua
+array = {"Google", "Runoob"}
+
+function elementIterator (collection)
+   local index = 0
+   local count = #collection
+   -- 闭包函数
+   return function ()
+      index = index + 1
+      if index <= count
+      then
+         --  返回迭代器的当前元素
+         return collection[index]
+      end
+   end
+end
+
+for element in elementIterator(array)
+do
+   print(element)
+end
+```
