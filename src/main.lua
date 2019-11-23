@@ -425,3 +425,266 @@ end
 function ipairs (a)
     return iter, a, 0
 end
+
+array = {"Google", "item2", "item3"}
+
+function elementIterator (collection)
+   local index = 0
+   local count = #collection
+   -- 闭包函数
+   return function ()
+      index = index + 1
+      if index <= count
+      then
+         --  返回迭代器的当前元素
+         return collection[index]
+      end
+   end
+end
+
+for element in elementIterator(array)
+do
+   print(element)
+end
+
+-- 初始化表
+mytable = {}
+-- 指定值
+mytable[1] = "lua"
+-- 移除引用
+mytable = nil
+-- lua垃圾回收会释放内存
+
+-- 简单的 table
+mytable = {}
+print("mytable 的类型是 ",type(mytable))
+
+mytable[1]= "Lua"
+mytable["wow"] = "修改前"
+print("mytable 索引为 1 的元素是 ", mytable[1])
+print("mytable 索引为 wow 的元素是 ", mytable["wow"])
+
+-- alternatetable和mytable的是指同一个 table
+alternatetable = mytable
+
+print("alternatetable 索引为 1 的元素是 ", alternatetable[1])
+print("mytable 索引为 wow 的元素是 ", alternatetable["wow"])
+
+alternatetable["wow"] = "修改后"
+
+print("mytable 索引为 wow 的元素是 ", mytable["wow"])
+
+-- 释放变量
+alternatetable = nil
+print("alternatetable 是 ", alternatetable)
+
+-- mytable 仍然可以访问
+print("mytable 索引为 wow 的元素是 ", mytable["wow"])
+
+mytable = nil
+print("mytable 是 ", mytable)
+
+fruits = {"banana","orange","apple"}
+-- 返回 table 连接后的字符串
+print("连接后的字符串 ",table.concat(fruits))
+
+-- 指定连接字符
+print("连接后的字符串 ",table.concat(fruits,", "))
+
+-- 指定索引来连接 table
+print("连接后的字符串 ",table.concat(fruits,", ", 2,3))
+
+fruits = {"banana","orange","apple"}
+
+-- 在末尾插入
+table.insert(fruits,"mango")
+print("索引为 4 的元素为 ",fruits[4])
+
+-- 在索引为 2 的键处插入
+table.insert(fruits,2,"grapes")
+print("索引为 2 的元素为 ",fruits[2])
+
+print("最后一个元素为 ",fruits[5])
+table.remove(fruits)
+print("移除后最后一个元素为 ",fruits[5])
+
+fruits = {"banana","orange","apple","grapes"}
+print("排序前")
+for k,v in ipairs(fruits) do
+   print(k,v)
+end
+
+table.sort(fruits)
+print("排序后")
+for k,v in ipairs(fruits) do
+   print(k,v)
+end
+
+function table_maxn(t)
+   local mn = nil;
+   for k, v in pairs(t) do
+      if(mn == nil) then
+         mn = v
+      end
+      if mn < v then
+         mn = v
+      end
+   end
+   return mn
+end
+tbl = {[1] = 2, [2] = 6, [3] = 34, [26] =5}
+print("tbl 最大值：", table_maxn(tbl))
+print("tbl 长度 ", #tbl)
+
+require("module")
+ 
+print(module.constant)
+  
+module.func3()
+
+mytable = setmetatable({key1 = "value1"}, {
+   __index = function(mytable, key)
+      if key == "key2" then
+         return "metatablevalue"
+      else
+         return nil
+      end
+   end
+})
+ 
+print(mytable.key1, mytable.key2)
+
+-- coroutine_test.lua 文件
+co = coroutine.create(
+    function(i)
+        print(i);
+    end
+)
+ 
+coroutine.resume(co, 1)   -- 1
+print(coroutine.status(co))  -- dead
+ 
+print("----------")
+ 
+co = coroutine.wrap(
+    function(i)
+        print(i);
+    end
+)
+ 
+co(1)
+ 
+print("----------")
+ 
+co2 = coroutine.create(
+    function()
+        for i=1,10 do
+            print(i)
+            if i == 3 then
+                print(coroutine.status(co2))  --running
+                print(coroutine.running()) --thread:XXXXXX
+            end
+            coroutine.yield()
+        end
+    end
+)
+ 
+coroutine.resume(co2) --1
+coroutine.resume(co2) --2
+coroutine.resume(co2) --3
+ 
+print(coroutine.status(co2))   -- suspended
+print(coroutine.running())
+ 
+print("----------")
+
+function foo (a)
+   print("foo 函数输出", a)
+   return coroutine.yield(2 * a) -- 返回  2*a 的值
+end
+
+co = coroutine.create(function (a , b)
+   print("第一次协同程序执行输出", a, b) -- co-body 1 10
+   local r = foo(a + 1)
+    
+   print("第二次协同程序执行输出", r)
+   local r, s = coroutine.yield(a + b, a - b)  -- a，b的值为第一次调用协同程序时传入
+    
+   print("第三次协同程序执行输出", r, s)
+   return b, "结束协同程序"                   -- b的值为第二次调用协同程序时传入
+end)
+      
+print("main", coroutine.resume(co, 1, 10)) -- true, 4
+print("--分割线----")
+print("main", coroutine.resume(co, "r")) -- true 11 -9
+print("---分割线---")
+print("main", coroutine.resume(co, "x", "y")) -- true 10 end
+print("---分割线---")
+print("main", coroutine.resume(co, "x", "y")) -- cannot resume dead coroutine
+print("---分割线---")
+
+-- 以只读方式打开文件
+file = io.open("test.lua", "r")
+
+-- 设置默认输入文件为 test.lua
+io.input(file)
+
+-- 输出文件第一行
+print(io.read())
+
+-- 关闭打开的文件
+io.close(file)
+
+-- 以附加的方式打开只写文件
+file = io.open("test.lua", "a")
+
+-- 设置默认输出文件为 test.lua
+io.output(file)
+
+-- 在文件最后一行添加 Lua 注释
+io.write("--  test.lua 文件末尾注释")
+
+-- 关闭打开的文件
+io.close(file)
+
+-- 元类
+Rectangle = {area = 0, length = 0, breadth = 0}
+
+-- 派生类的方法 new
+function Rectangle:new (o,length,breadth)
+  o = o or {}
+  setmetatable(o, self)
+  self.__index = self
+  self.length = length or 0
+  self.breadth = breadth or 0
+  self.area = length*breadth;
+  return o
+end
+
+-- 派生类的方法 printArea
+function Rectangle:printArea ()
+  print("矩形面积为 ",self.area)
+end
+
+-- 元类
+Shape = {area = 0}
+
+-- 基础类方法 new
+function Shape:new (o,side)
+  o = o or {}
+  setmetatable(o, self)
+  self.__index = self
+  side = side or 0
+  self.area = side*side;
+  return o
+end
+
+-- 基础类方法 printArea
+function Shape:printArea ()
+  print("面积为 ",self.area)
+end
+
+-- 创建对象
+myshape = Shape:new(nil,10)
+
+myshape:printArea()
